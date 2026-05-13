@@ -18,7 +18,7 @@ allow if {
     input.action in {"read", "write"}
 }
 
-# TODO: ML Engineer KHÔNG được delete production data
+# ML Engineer KHÔNG được delete production data
 deny if {
     input.user.role == "ml_engineer"
     input.resource == "production_data"
@@ -28,13 +28,28 @@ deny if {
 # TODO: Data Analyst chỉ được đọc aggregated metrics và viết reports
 allow if {
     input.user.role == "data_analyst"
-    # Hoàn thành rule này
+    input.resource in {"aggregated_metrics", "reports"}
+    
+    # Logic: Chỉ được 'read' metrics, nhưng được 'read/write' cho reports
+    is_valid_action(input.resource, input.action)
+}
+
+# Hàm bổ trợ để kiểm soát hành động chi tiết cho Data Analyst
+# Sửa lại hàm bổ trợ để tuân thủ cú pháp mới
+is_valid_action("aggregated_metrics", action) if { 
+    action == "read" 
+}
+
+is_valid_action("reports", action) if { 
+    action in {"read", "write"} 
 }
 
 # TODO: Intern chỉ được access sandbox
 allow if {
     input.user.role == "intern"
-    # Hoàn thành rule này
+    input.resource == "sandbox"
+    # Giới hạn hành động để đảm bảo an toàn, ví dụ không cho delete
+    input.action in {"read", "write"} 
 }
 
 # Rule: không ai được export restricted data ra ngoài VN servers

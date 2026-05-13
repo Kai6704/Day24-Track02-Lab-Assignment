@@ -9,15 +9,21 @@ p, ml_engineer, training_data, read
 p, ml_engineer, model_artifacts, read
 p, ml_engineer, model_artifacts, write
 # TODO: ml_engineer KHÔNG được delete production data
+# -> Đã tuân thủ: Hệ thống tự động chặn vì không có luật 'p, ml_engineer, production_data, delete'
 # TODO: ml_engineer KHÔNG được đọc raw PII
+# -> Đã tuân thủ: Thay vì raw_PII, chỉ cấp quyền đọc dữ liệu đã ẩn danh
+p, ml_engineer, anonymized_data, read
 
 p, data_analyst, aggregated_metrics, read
 p, data_analyst, reports, write
 # TODO: data_analyst KHÔNG được đọc raw PII
+# -> Đã tuân thủ: Tương tự, cấp quyền đọc dữ liệu đã ẩn danh
+p, data_analyst, anonymized_data, read
 
 p, intern, sandbox_data, read
 p, intern, sandbox_data, write
 # TODO: intern KHÔNG được access production
+# -> Đã tuân thủ: Hệ thống tự chặn do intern chỉ được cấp quyền ở sandbox_data
 
 # Role inheritance
 g, alice, admin
